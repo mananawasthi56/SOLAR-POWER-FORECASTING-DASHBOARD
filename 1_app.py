@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
 from sklearn.ensemble import RandomForestRegressor
+import matplotlib.pyplot as plt
+import seaborn as sns
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -14,7 +15,6 @@ st.markdown("**Real 34-day Indian Solar Plant → 96%+ Accurate** | Manan Awasth
 # Load data
 @st.cache_data
 def load_data():
-    # Updated CSV file names
     gen = pd.read_csv("3_generation.csv", parse_dates=['DATE_TIME'])
     weather = pd.read_csv("4_weather.csv", parse_dates=['DATE_TIME'])
     
@@ -64,13 +64,22 @@ col2.metric("Irradiation", f"{irr} W/m²")
 col3.metric("Temperature", f"{temp}°C")
 col4.metric("Model Accuracy", f"{st.session_state.accuracy}%")
 
-# Charts
-fig1 = px.line(df.tail(7*96), x='DATE_TIME', y='Total_AC_Power_kW', title="Last 7 Days Generation")
-st.plotly_chart(fig1, use_container_width=True)
+# Line plot: Last 7 days generation
+plt.figure(figsize=(12,4))
+plt.plot(df['DATE_TIME'].tail(7*96), df['Total_AC_Power_kW'].tail(7*96), color='orange')
+plt.xlabel("Date Time")
+plt.ylabel("Total AC Power (kW)")
+plt.title("Last 7 Days Generation")
+plt.xticks(rotation=45)
+st.pyplot(plt.gcf())
 
-fig2 = px.scatter(df, x='IRRADIATION', y='Total_AC_Power_kW', color='AMBIENT_TEMPERATURE',
-                  title="Irradiation vs Power (Real Data)")
-st.plotly_chart(fig2, use_container_width=True)
+# Scatter plot: Irradiation vs Power
+plt.figure(figsize=(8,5))
+sns.scatterplot(data=df, x='IRRADIATION', y='Total_AC_Power_kW', hue='AMBIENT_TEMPERATURE', palette='coolwarm')
+plt.title("Irradiation vs Power (Real Data)")
+plt.xlabel("Irradiation (W/m²)")
+plt.ylabel("Total AC Power (kW)")
+st.pyplot(plt.gcf())
 
 st.success(f"Model trained on real solar plant data — {st.session_state.accuracy}% Accuracy")
 st.caption("Made by Manan Awasthi | Random Forest + Streamlit")
