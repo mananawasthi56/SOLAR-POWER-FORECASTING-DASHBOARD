@@ -15,8 +15,8 @@ st.markdown("**Real 34-day Indian Solar Plant → 96%+ Accurate** | Manan Awasth
 @st.cache_data
 def load_data():
     # Updated CSV file names
-    gen = pd.read_csv("2_generation.csv", parse_dates=['DATE_TIME'])
-    weather = pd.read_csv("3_weather.csv", parse_dates=['DATE_TIME'])
+    gen = pd.read_csv("3_generation.csv", parse_dates=['DATE_TIME'])
+    weather = pd.read_csv("4_weather.csv", parse_dates=['DATE_TIME'])
     
     gen['DATE_TIME'] = pd.to_datetime(gen['DATE_TIME'], format='%d-%m-%Y %H:%M')
     plant_gen = gen.groupby('DATE_TIME')['AC_POWER'].sum().reset_index()
