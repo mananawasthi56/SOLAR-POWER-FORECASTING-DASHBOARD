@@ -1,3 +1,20 @@
+# Dynamic package installation
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# List of required packages
+packages = ["streamlit", "pandas", "numpy", "scikit-learn", "matplotlib", "seaborn"]
+
+for package in packages:
+    try:
+        __import__(package)
+    except ImportError:
+        install(package)
+
+# Now import packages
 import streamlit as st
 import pandas as pd
 import numpy as np
